@@ -1,20 +1,25 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import FieldRenderer from './FieldRenderer';
-import type { SchemaType } from '../schema/page';
+import React, { useState, ChangeEvent, FormEvent } from "react";
+import FieldRenderer from "./FieldRenderer";
+import type { SchemaType, SiteProperties } from "../schema/page";
 
 interface FormProps {
   schema: SchemaType;
+  onSubmitCb: () => void;
 }
 
-const Form: React.FC<FormProps> = ({ schema }) => {
+const Form: React.FC<FormProps> = ({ schema, onSubmitCb }) => {
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
+
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  };
 
   const handleInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = event.target;
     const fieldValue =
-      type === 'checkbox' ? (event.target as HTMLInputElement).checked : value;
+      type === "checkbox" ? (event.target as HTMLInputElement).checked : value;
 
     setFormData((prevData) => ({
       ...prevData,
@@ -23,11 +28,11 @@ const Form: React.FC<FormProps> = ({ schema }) => {
   };
 
   return (
-    // TODO-1: Form should submit this information
-    <form className="space-y-8">
-      {Object.keys(schema.properties).map((fieldName) => (
+    <form className="space-y-8" onSubmit={handleFormSubmit}>
+      {Object.keys(schema.properties).map((fieldName: SiteProperties) => (
         <FieldRenderer
           key={fieldName}
+          value={formData[fieldName]}
           fieldName={fieldName}
           schema={schema}
           handleInputChange={handleInputChange}

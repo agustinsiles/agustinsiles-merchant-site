@@ -1,4 +1,4 @@
-import { Redis } from '@upstash/redis';
+import { Redis } from "@upstash/redis";
 
 // See documentation at
 // https://docs.upstash.com/redis/sdks/javascriptsdk/getstarted#basic-usage
@@ -8,5 +8,6 @@ const redis = new Redis({
 });
 
 // NOTE: use your full_name as a key prefix when writing to Redis, to avoid collisions.
+export const REDIS_SITE_KEY = "agustin_siles:mywebsite";
 
 export default redis;

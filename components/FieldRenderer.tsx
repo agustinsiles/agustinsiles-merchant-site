@@ -1,9 +1,10 @@
-import React, { ChangeEvent } from 'react';
-import type { SchemaType } from '../schema/page';
+import React, { ChangeEvent } from "react";
+import type { SchemaType, SiteProperties } from "../schema/page";
 
 interface FieldRendererProps {
-  fieldName: string;
+  fieldName: SiteProperties;
   schema: SchemaType;
+  value: string;
   handleInputChange: (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
@@ -16,7 +17,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
 }) => {
   const { title, type } = schema.properties[fieldName];
 
-  if (type === 'string') {
+  if (type === "string") {
     return (
       <div key={fieldName} className="mb-4">
         <label htmlFor={fieldName} className="block text-gray-700">
@@ -34,7 +35,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
     );
   }
 
-  if (type === 'text') {
+  if (type === "text") {
     return (
       <div key={fieldName} className="mb-4">
         <label htmlFor={fieldName} className="block text-gray-700">
@@ -52,7 +53,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
     );
   }
 
-  if (type === 'boolean') {
+  if (type === "boolean") {
     return (
       <div key={fieldName} className="mb-4">
         <div className="flex items-center">

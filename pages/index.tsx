@@ -1,10 +1,17 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
-import Form from '../components/Form';
-import schema from '../schema/page';
+import Form from "../components/Form";
+import schema from "../schema/page";
+import { useRouter } from "next/router";
 
 const App: React.FC = () => {
+  const router = useRouter();
+
+  const handleFormSubmit = () => {
+    router.push("/site");
+  };
+
   return (
     <div className="w-full mx-auto">
       <div className="px-4 sm:px-6 py-4 sm:py-6 mb-12 bg-gray-100">
@@ -21,7 +28,7 @@ const App: React.FC = () => {
         </div>
       </div>
       <div className="px-4 sm:px-6">
-        <Form schema={schema} />
+        <Form schema={schema} onSubmitCb={handleFormSubmit} />
       </div>
     </div>
   );

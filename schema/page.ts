@@ -14,19 +14,23 @@ export default {
       title: "Heading",
       type: "string",
       placeholder: "Here goes the title",
+      requiredErrorMsg: "Heading is required",
     },
     [SiteProperties.DESCRIPTION]: {
       title: "Description",
       type: "string",
       placeholder: "Write a description here.",
+      requiredErrorMsg: "Description is required",
     },
     [SiteProperties.PRIMARY_BUTTON_TEXT]: {
       title: "Primary Button Text",
       type: "string",
+      requiredErrorMsg: "Primary button is required",
     },
     [SiteProperties.SECONDARY_BUTTON_TEXT]: {
       title: "Secondary Button Text",
       type: "string",
+      requiredErrorMsg: "Secondary button is required",
     },
     [SiteProperties.TRUNCATE_DESCRIPTION]: {
       title: "Truncate Description",
@@ -48,6 +52,7 @@ export type SchemaType = {
       title: string;
       type: string;
       placeholder?: string;
+      requiredErrorMsg?: string;
     };
   };
   required: SiteProperties[];

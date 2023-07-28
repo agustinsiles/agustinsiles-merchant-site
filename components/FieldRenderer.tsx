@@ -1,51 +1,39 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import type { SchemaType, SiteProperties } from "../schema/page";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import FieldLabel from "./FieldLabel";
+import ErrorMessage from "./ErrorMessage";
 
 interface FieldRendererProps {
   fieldName: SiteProperties;
   schema: SchemaType;
-  value: string;
-  handleInputChange: (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
 }
 
-const FieldRenderer: React.FC<FieldRendererProps> = ({
-  fieldName,
-  schema,
-  value,
-  handleInputChange,
-}) => {
-  const { register } = useFormContext();
-  const { title, type, placeholder } = schema.properties[fieldName];
+const FieldRenderer: React.FC<FieldRendererProps> = ({ fieldName, schema }) => {
   const required = schema.required.indexOf(fieldName) > -1;
-  const inputProps = {
-    id: fieldName,
-    name: fieldName,
-    value,
-    placeholder,
-  };
+  const { control, formState } = useFormContext();
+  const { title, type, placeholder, requiredErrorMsg } =
+    schema.properties[fieldName];
 
   if (type === "string") {
     return (
       <div key={fieldName} className="mb-4">
         <FieldLabel fieldName={fieldName} required={required} title={title} />
-        <input
-          type="text"
-          required={true}
-          className="mt-1 px-4 py-2 block w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          id={fieldName}
-          value={value}
-          {...register(fieldName, {
-            onChange: handleInputChange,
-            required: {
-              value: true,
-              message: "required",
-            },
-          })}
+        <Controller
+          name={fieldName}
+          control={control}
+          rules={{
+            required: requiredErrorMsg,
+          }}
+          render={({ field }) => (
+            <input
+              {...field}
+              className="mt-1 px-4 py-2 block w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder={placeholder}
+            />
+          )}
         />
+        <ErrorMessage name={fieldName} errors={formState.errors} />
       </div>
     );
   }
@@ -54,18 +42,22 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
     return (
       <div key={fieldName} className="mb-4">
         <FieldLabel fieldName={fieldName} required={required} title={title} />
-        <textarea
-          rows={8}
-          className="mt-1 px-4 py-2 block w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          {...inputProps}
-          {...register(fieldName, {
-            onChange: handleInputChange,
-            required: {
-              value: true,
-              message: "required",
-            },
-          })}
-        ></textarea>
+        <Controller
+          name={fieldName}
+          control={control}
+          rules={{
+            required: requiredErrorMsg,
+          }}
+          render={({ field }) => (
+            <textarea
+              {...field}
+              rows={8}
+              className="mt-1 px-4 py-2 block w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder={placeholder}
+            />
+          )}
+        />
+        <ErrorMessage name={fieldName} errors={formState.errors} />
       </div>
     );
   }
@@ -74,17 +66,16 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
     return (
       <div key={fieldName} className="mb-4">
         <div className="flex items-center">
-          <input
-            type="checkbox"
-            className="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
-            {...inputProps}
-            {...register(fieldName, {
-              onChange: handleInputChange,
-              required: {
-                value: true,
-                message: "required",
-              },
-            })}
+          <Controller
+            name={fieldName}
+            control={control}
+            render={({ field }) => (
+              <input
+                {...field}
+                type="checkbox"
+                className="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+              />
+            )}
           />
           <FieldLabel fieldName={fieldName} required={required} title={title} />
         </div>

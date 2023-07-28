@@ -12,6 +12,17 @@ const Form: React.FC<FormProps> = ({ schema, onSubmitCb }) => {
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const operation = await fetch("/api/site", {
+      method: "POST",
+      body: JSON.stringify(formData),
+    });
+
+    if (operation.ok) {
+      onSubmitCb();
+    } else {
+      console.log(operation);
+    }
   };
 
   const handleInputChange = (

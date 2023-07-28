@@ -27,18 +27,7 @@ const App: React.FC<{ data: SiteType }> = ({ data }) => (
 );
 
 export async function getStaticProps() {
-  const redisDoc = await redis.get(REDIS_SITE_KEY);
-
-  console.log(redisDoc);
-  debugger;
-  // TODO-1: Site should read this data instead of mocking it
-  const data = {
-    heading: "Join our team",
-    description:
-      "Lorem ipsum dolor sit amet. Eos accusamus fuga aut dolorum mollitia eum quia dolores id repudiandae autem. Aut dolore voluptates non unde quod vel alias adipisci ut impedit laudantium hic quos tempora? Ut accusamus voluptatum ut quia debitis est inventore voluptatum quo iusto nesciunt sed sint omnis quo impedit nemo ab voluptas quia. Qui modi labore et odit quis sit odit voluptatem et magnam ullam et impedit laboriosam.",
-    primaryButtonText: "Get started",
-    secondaryButtonText: "Learn more",
-  };
+  const data = await redis.get(REDIS_SITE_KEY);
 
   return {
     props: {

@@ -15,7 +15,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
   schema,
   handleInputChange,
 }) => {
-  const { title, type } = schema.properties[fieldName];
+  const { title, type, placeholder } = schema.properties[fieldName];
 
   if (type === "string") {
     return (
@@ -29,7 +29,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
           name={fieldName}
           onChange={handleInputChange}
           className="mt-1 px-4 py-2 block w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          placeholder={`Enter your ${fieldName}`}
+          placeholder={placeholder}
         />
       </div>
     );
@@ -47,7 +47,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
           rows={8}
           onChange={handleInputChange}
           className="mt-1 px-4 py-2 block w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          placeholder={`Enter your ${fieldName}`}
+          placeholder={placeholder}
         ></textarea>
       </div>
     );

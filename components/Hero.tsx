@@ -31,7 +31,7 @@ const Hero: React.FC<{ data: SiteType }> = ({ data }) => (
           </h2>
           <p
             className={`mt-6 text-lg leading-8 text-gray-300 ${
-              data.truncateDescription ? "max-w-sm line-clamp-4" : ""
+              data.truncateDescription ? "truncate" : ""
             }`}
           >
             {data.description}

@@ -1,5 +1,5 @@
 import React from "react";
-import type { SchemaType, SiteProperties } from "../schema/page";
+import type { SchemaType, SiteProperties, SiteType } from "../schema/page";
 import { Controller, useFormContext } from "react-hook-form";
 import FieldLabel from "./FieldLabel";
 import ErrorMessage from "./ErrorMessage";
@@ -11,9 +11,15 @@ interface FieldRendererProps {
 
 const FieldRenderer: React.FC<FieldRendererProps> = ({ fieldName, schema }) => {
   const required = schema.required.indexOf(fieldName) > -1;
-  const { control, formState } = useFormContext();
-  const { title, type, placeholder, requiredErrorMsg } =
+  const { control, formState, watch, getValues } = useFormContext();
+  const { title, type, placeholder, requiredErrorMsg, shouldShow } =
     schema.properties[fieldName];
+
+  watch();
+
+  if (shouldShow instanceof Function && !shouldShow(getValues() as SiteType)) {
+    return null;
+  }
 
   if (type === "string") {
     return (
@@ -77,6 +83,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({ fieldName, schema }) => {
               <input
                 {...field}
                 id={fieldName}
+                checked={field.value}
                 type="checkbox"
                 className="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
               />

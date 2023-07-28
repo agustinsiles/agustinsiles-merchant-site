@@ -28,7 +28,11 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({ fieldName, schema }) => {
           render={({ field }) => (
             <input
               {...field}
-              className="mt-1 px-4 py-2 block w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className={`mt-1 px-4 py-2 block w-full border rounded-md shadow-sm sm:text-sm ${
+                formState.errors[fieldName]
+                  ? "bg-red-900"
+                  : "focus:ring-blue-500 focus:border-blue-500"
+              }`}
               placeholder={placeholder}
             />
           )}

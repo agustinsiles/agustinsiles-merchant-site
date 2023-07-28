@@ -35,6 +35,8 @@ export default {
     [SiteProperties.TRUNCATE_DESCRIPTION]: {
       title: "Truncate Description",
       type: "boolean",
+      shouldShow: (formState: SiteType) =>
+        formState[SiteProperties.DESCRIPTION].length > 100,
     },
   },
   required: [
@@ -53,6 +55,7 @@ export type SchemaType = {
       type: string;
       placeholder?: string;
       requiredErrorMsg?: string;
+      shouldShow?: (formState: SiteType) => boolean;
     };
   };
   required: SiteProperties[];

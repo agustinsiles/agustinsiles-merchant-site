@@ -1,15 +1,19 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import FieldRenderer from "./FieldRenderer";
-import type { SchemaType, SiteProperties } from "../schema/page";
+import type { SchemaType, SiteProperties, SiteType } from "../schema/page";
 
 interface FormProps {
+  data: SiteType;
   schema: SchemaType;
   onSubmitCb: () => void;
 }
 
-const Form: React.FC<FormProps> = ({ schema, onSubmitCb }) => {
-  const [formData, setFormData] = useState<{ [key: string]: any }>({});
-
+const Form: React.FC<FormProps> = ({
+  data = {} as SiteType,
+  schema,
+  onSubmitCb,
+}) => {
+  const [formData, setFormData] = useState<SiteType>(data);
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 

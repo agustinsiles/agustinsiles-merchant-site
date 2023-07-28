@@ -2,10 +2,11 @@ import React from "react";
 import Link from "next/link";
 
 import Form from "../components/Form";
-import schema from "../schema/page";
+import schema, { SiteType } from "../schema/page";
 import { useRouter } from "next/router";
+import redis, { REDIS_SITE_KEY } from "../lib/db";
 
-const App: React.FC = () => {
+const App: React.FC = ({ data }: { data: SiteType }) => {
   const router = useRouter();
 
   const handleFormSubmit = () => {
@@ -28,10 +29,20 @@ const App: React.FC = () => {
         </div>
       </div>
       <div className="px-4 sm:px-6">
-        <Form schema={schema} onSubmitCb={handleFormSubmit} />
+        <Form schema={schema} onSubmitCb={handleFormSubmit} data={data} />
       </div>
     </div>
   );
 };
+
+export async function getStaticProps() {
+  const data = await redis.get(REDIS_SITE_KEY);
+
+  return {
+    props: {
+      data,
+    },
+  };
+}
 
 export default App;

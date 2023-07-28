@@ -29,10 +29,15 @@ const App: React.FC<{ data: SiteType }> = ({ data }) => (
 export async function getStaticProps() {
   const data = await redis.get(REDIS_SITE_KEY);
 
+  if (!data) {
+    return { notFound: true };
+  }
+
   return {
     props: {
-      data,
+      data: data,
     },
+    revalidate: 30,
   };
 }
 

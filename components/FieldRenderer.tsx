@@ -76,6 +76,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({ fieldName, schema }) => {
             render={({ field }) => (
               <input
                 {...field}
+                id={fieldName}
                 type="checkbox"
                 className="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
               />

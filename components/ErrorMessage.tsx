@@ -11,7 +11,7 @@ const ErrorMessage: React.FC<IProps> = ({ name, errors }) => {
 
   if (!error) return null;
 
-  return <span className="text-red-800 bold">{error.message!}</span>;
+  return <span className="text-red-800">{error.message!}</span>;
 };
 
 export default ErrorMessage;

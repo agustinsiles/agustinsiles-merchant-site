@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import FieldRenderer from "./FieldRenderer";
 import type { SchemaType, SiteProperties, SiteType } from "../schema/page";
 import { FormProvider, useForm } from "react-hook-form";
@@ -14,16 +14,21 @@ const Form: React.FC<FormProps> = ({
   schema,
   onSubmitCb,
 }) => {
+  const [requestError, setRequestError] = useState(false);
   const methods = useForm({
     defaultValues: data,
     mode: "onChange",
   });
+  const disableSubmit =
+    !methods.formState.isValid || methods.formState.isSubmitting;
 
   const handleFormSubmit = methods.handleSubmit(async (data) => {
     const operation = await fetch("/api/site", {
       method: "POST",
       body: JSON.stringify(data),
     });
+
+    setRequestError(!operation.ok);
 
     if (operation.ok) {
       onSubmitCb();
@@ -33,33 +38,40 @@ const Form: React.FC<FormProps> = ({
   });
 
   return (
-    <FormProvider {...methods}>
-      <form
-        className="space-y-8"
-        onSubmit={methods.handleSubmit(handleFormSubmit)}
-        noValidate
-      >
-        {Object.keys(schema.properties).map((fieldName: SiteProperties) => (
-          <FieldRenderer
-            key={fieldName}
-            fieldName={fieldName}
-            schema={schema}
-          />
-        ))}
-        <div>
-          <button
-            disabled={!methods.formState.isValid}
-            className={`py-2 px-4  text-white rounded-md focus:ring-2 focus:ring-offset-2 ${
-              methods.formState.isValid
-                ? "bg-blue-500 hover:bg-blue-600 focus:ring-blue-500"
-                : "bg-gray-200"
-            }`}
-          >
-            Submit
-          </button>
+    <div>
+      <FormProvider {...methods}>
+        <form
+          className="space-y-8"
+          onSubmit={methods.handleSubmit(handleFormSubmit)}
+          noValidate
+        >
+          {Object.keys(schema.properties).map((fieldName: SiteProperties) => (
+            <FieldRenderer
+              key={fieldName}
+              fieldName={fieldName}
+              schema={schema}
+            />
+          ))}
+          <div>
+            <button
+              disabled={disableSubmit}
+              className={`py-2 px-4  text-white rounded-md focus:ring-2 focus:ring-offset-2 ${
+                !disableSubmit
+                  ? "bg-blue-500 hover:bg-blue-600 focus:ring-blue-500"
+                  : "bg-gray-200"
+              }`}
+            >
+              {methods.formState.isSubmitting ? "Sending..." : "Submit"}
+            </button>
+          </div>
+        </form>
+      </FormProvider>
+      {requestError && (
+        <div className="text-red-800  text-center bold">
+          Oops! There was an error with the operation. Please try again.
         </div>
-      </form>
-    </FormProvider>
+      )}
+    </div>
   );
 };
 

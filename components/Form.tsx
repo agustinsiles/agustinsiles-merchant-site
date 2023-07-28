@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import FieldRenderer from "./FieldRenderer";
 import type { SchemaType, SiteProperties, SiteType } from "../schema/page";
+import { FormProvider, useForm } from "react-hook-form";
 
 interface FormProps {
   data: SiteType;
@@ -13,13 +14,12 @@ const Form: React.FC<FormProps> = ({
   schema,
   onSubmitCb,
 }) => {
+  const methods = useForm();
   const [formData, setFormData] = useState<SiteType>(data);
-  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handleFormSubmit = methods.handleSubmit(async (data) => {
     const operation = await fetch("/api/site", {
       method: "POST",
-      body: JSON.stringify(formData),
+      body: JSON.stringify(data),
     });
 
     if (operation.ok) {
@@ -27,7 +27,7 @@ const Form: React.FC<FormProps> = ({
     } else {
       console.log(operation);
     }
-  };
+  });
 
   const handleInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -43,25 +43,36 @@ const Form: React.FC<FormProps> = ({
   };
 
   return (
-    <form className="space-y-8" onSubmit={handleFormSubmit}>
-      {Object.keys(schema.properties).map((fieldName: SiteProperties) => (
-        <FieldRenderer
-          key={fieldName}
-          value={formData[fieldName]}
-          fieldName={fieldName}
-          schema={schema}
-          handleInputChange={handleInputChange}
-        />
-      ))}
-      <div>
-        <button
-          type="submit"
-          className="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
-          Submit
-        </button>
-      </div>
-    </form>
+    <FormProvider {...methods}>
+      <form
+        className="space-y-8"
+        onSubmit={(e) => e.preventDefault()}
+        noValidate
+      >
+        {Object.keys(schema.properties).map((fieldName: SiteProperties) => (
+          <FieldRenderer
+            key={fieldName}
+            value={formData[fieldName]}
+            fieldName={fieldName}
+            schema={schema}
+            handleInputChange={handleInputChange}
+          />
+        ))}
+        <div>
+          <button
+            onClick={handleFormSubmit}
+            disabled={!methods.formState.isValid}
+            className={`py-2 px-4  text-white rounded-md focus:ring-2 focus:ring-offset-2 ${
+              methods.formState.isValid
+                ? "bg-blue-500 hover:bg-blue-600 focus:ring-blue-500"
+                : "bg-gray-200 hover:bg-gray-300 focus:ring-gray-200"
+            }`}
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </FormProvider>
   );
 };
 
